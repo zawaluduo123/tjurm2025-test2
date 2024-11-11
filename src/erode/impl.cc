@@ -46,6 +46,61 @@ std::vector<cv::Mat> erode(const cv::Mat& src_erode, const cv::Mat& src_dilate) 
     cv::Mat dst_erode, dst_dilate;
 
     // TODO: 在这里实现你的代码
+   cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+    erode(src_erode, dst_erode, kernel);
+    dilate(src_dilate, dst_dilate, kernel);
 
     return {dst_erode, dst_dilate};
 }
+void erode(const cv::Mat& src, cv::Mat& dst, const cv::Mat& kernel) {
+    dst = src.clone(); // 复制源图像到目标图像
+    for (int i = 0; i < src.rows; ++i) {
+        for (int j = 0; j < src.cols; ++j) {
+            bool isWhite = true;
+            for (int ki = 0; ki < kernel.rows; ++ki) {
+                for (int kj = 0; kj < kernel.cols; ++kj) {
+                    int ni = i + ki - kernel.rows / 2;
+                    int nj = j + kj - kernel.cols / 2;
+                    if (ni < 0 || ni >= src.rows || nj < 0 || nj >= src.cols || src.at<uchar>(ni, nj) != 255) {
+                        isWhite = false;
+                        break;
+                    }
+                }
+                if (!isWhite) break;
+            }
+            if (isWhite) {
+                dst.at<uchar>(i, j) = 255;
+            } else {
+                dst.at<uchar>(i, j) = 0;
+            }
+        }
+    }
+}
+
+void dilate(const cv::Mat& src, cv::Mat& dst, const cv::Mat& kernel) {
+    dst = src.clone(); // 复制源图像到目标图像
+    for (int i = 0; i < src.rows; ++i) {
+        for (int j = 0; j < src.cols; ++j) {
+            bool hasWhite = false;
+            for (int ki = 0; ki < kernel.rows; ++ki) {
+                for (int kj = 0; kj < kernel.cols; ++kj) {
+                    int ni = i + ki - kernel.rows / 2;
+                    int nj = j + kj - kernel.cols / 2;
+                    if (ni >= 0 && ni < src.rows && nj >= 0 && nj < src.cols && src.at<uchar>(ni, nj) == 255) {
+                        hasWhite = true;
+                        break;
+                    }
+                }
+                if (hasWhite) break;
+            }
+            if (hasWhite) {
+                dst.at<uchar>(i, j) = 255;
+            } else {
+                dst.at<uchar>(i, j) = 0;
+            }
+        }
+    }
+}
+
+  

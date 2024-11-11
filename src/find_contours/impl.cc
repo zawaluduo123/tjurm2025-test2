@@ -19,5 +19,22 @@ std::vector<std::vector<cv::Point>> find_contours(const cv::Mat& input) {
     
     std::vector<std::vector<cv::Point>> res;
     // IMPLEMENT YOUR CODE HERE
+    cv::Mat gray, binary;
+    cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY); // 转换为灰度图
+
+    // 应用高斯模糊来减少噪声
+    cv::GaussianBlur(gray, gray, cv::Size(5, 5), 0);
+
+    // 手动选择一个阈值
+    cv::threshold(gray, binary, 100, 255, cv::THRESH_BINARY);
+
+    // 形态学操作：开运算（先腐蚀后膨胀），以去除小对象
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::morphologyEx(binary, binary, cv::MORPH_OPEN, kernel);
+
+
+    cv::findContours(binary, res, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+
     return res;
 }

@@ -28,6 +28,12 @@ std::vector<cv::Mat> threshold(const cv::Mat& src, int threshold_value) {
     cv::Mat gray, dst;
 
     // TODO: 实现代码
+// 将彩色图像转换为灰度图像
+    cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
 
+    // 阈值化转换为二值化图像
+    cv::threshold(gray, dst, threshold_value, 255, cv::THRESH_BINARY);
+
+    // 将灰度图像和二值化图像存储在向量中并返回
     return {gray, dst};
 }

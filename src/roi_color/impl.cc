@@ -28,8 +28,46 @@ std::unordered_map<int, cv::Rect> roi_color(const cv::Mat& input) {
      *      3. 使用统计的方法，得到该 ROI 区域的颜色
      *      4. 将颜色 和 矩形位置 存入 map 中
      */
+    // IMPLEMENT YOUR CODE HERE
+// 存储结果的 unordered_map
     std::unordered_map<int, cv::Rect> res;
     // IMPLEMENT YOUR CODE HERE
+// 将输入图像转换为灰度图像
+    cv::Mat gray;
+    cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
 
+    // 二值化图像
+    cv::Mat binary;
+    cv::threshold(gray, binary, 0, 255, cv::THRESH_BINARY_INV + cv::THRESH_OTSU);
+
+    // 查找轮廓
+    std::vector<std::vector<cv::Point>> contours;
+    cv::findContours(binary, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+ // 遍历所有轮廓
+    for (const auto& contour : contours) {
+        // 计算外接矩形
+        cv::Rect rect = cv::boundingRect(contour);
+
+        // 计算 ROI 区域的颜色
+        int blue = 0, green = 0, red = 0;
+        for (int y = rect.y; y < rect.y + rect.height; ++y) {
+            for (int x = rect.x; x < rect.x + rect.width; ++x) {
+                cv::Vec3b color = input.at<cv::Vec3b>(y, x);
+                blue += color[0];
+                green += color[1];
+                red += color[2];
+            }
+        }
+
+        // 计算平均颜色
+        int area = rect.width * rect.height;
+        blue /= area;
+        green /= area;
+        red /= area;
+
+        // 将颜色和矩形位置存入 map 中
+        res[(blue << 16) + (green << 8) + red] = rect;
+    }
     return res;
 }

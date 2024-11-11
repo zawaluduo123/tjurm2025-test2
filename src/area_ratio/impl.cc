@@ -13,5 +13,16 @@ float compute_area_ratio(const std::vector<cv::Point>& contour) {
      * 通过条件:
      * 运行测试点，通过即可。
      */
+    // 计算轮廓的面积
+    double contourArea = cv::contourArea(contour);
+
+    // 获取轮廓的最小外接矩形
+    cv::RotatedRect minRect = cv::minAreaRect(contour);
+
+    // 计算最小外接矩形的面积
+    double rectArea = minRect.size.area();
+
+    // 计算并返回面积比例
+    return static_cast<float>(contourArea / rectArea);
     return 0.f;
 }
