@@ -24,5 +24,5 @@ float compute_area_ratio(const std::vector<cv::Point>& contour) {
 
     // 计算并返回面积比例
     return static_cast<float>(contourArea / rectArea);
-    return 0.f;
+   
 }

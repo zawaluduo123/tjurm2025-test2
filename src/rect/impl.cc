@@ -46,5 +46,5 @@ std::pair<cv::Rect, cv::RotatedRect> get_rect_by_contours(const cv::Mat& input) 
 
     // 返回结果
     return {boundingRect, minAreaRect};
-    return res;
+    
 }
