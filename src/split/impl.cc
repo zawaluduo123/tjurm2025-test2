@@ -21,5 +21,5 @@ std::vector<cv::Mat> split(const cv::Mat& rgb_image) {
 std::vector<cv::Mat> channels(3); // 创建一个包含三个元素的向量，用于存储三个通道
     cv::split(rgb_image, channels);   // 使用cv::split函数分割图像
     return channels;                  // 返回包含三个通道的向量
-    return result;
+    
 }
