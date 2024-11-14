@@ -34,5 +34,4 @@ cv::Mat my_resize(const cv::Mat& input, float scale) {
     }
 
     return output;
-    return cv::Mat::zeros(new_rows, new_cols, input.type());
 }
